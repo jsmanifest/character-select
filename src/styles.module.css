@@ -1,0 +1,194 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: rgb(23, 30, 34);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.root {
+  padding: 20px 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  text-align: center;
+  color: rgb(252, 216, 169);
+  font-weight: 300;
+  margin: 0;
+}
+
+.subheader {
+  color: #fff;
+  text-align: center;
+  font-weight: 300;
+  width: 100%;
+  display: block;
+}
+
+.characterBox {
+  transition: all 0.1s ease-out;
+  width: 300px;
+  height: 250px;
+  border: 1px solid rgb(194, 5, 115);
+  background: rgb(82, 26, 134);
+  margin: 12px 6px;
+  overflow: hidden;
+}
+
+.characterBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.selectedBox {
+  border: 1px solid rgb(24, 240, 255) !important;
+}
+
+.characterBox h2 {
+  transition: all 0.3s ease-out;
+  text-align: center;
+  color: rgb(213, 202, 255);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.characterBox:hover h2 {
+  color: rgb(191, 255, 241);
+}
+
+.characterBox img {
+  transition: all 0.3s ease-out;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.characterBox img.tier2:hover,
+.characterBox img.selected {
+  animation: hueRotate 2s infinite;
+  transform: scale(1.05);
+}
+
+.morph {
+  margin: 30px auto;
+  text-align: center;
+}
+
+.morphArrow {
+  color: rgb(123, 247, 199);
+  transform: scale(2);
+  animation: morphArrow 2s infinite;
+}
+
+.morphArrowFlipped {
+  composes: morphArrow;
+  transform: scale(-2, 2);
+}
+
+@keyframes morphArrow {
+  0% {
+    opacity: 1;
+    color: rgb(123, 247, 199);
+  }
+  40% {
+    opacity: 0.4;
+    color: rgb(248, 244, 20);
+  }
+  100% {
+    opacity: 1;
+    color: rgb(123, 247, 199);
+  }
+}
+
+button.morph {
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  border-radius: 25px;
+  padding: 14px 22px;
+  color: #fff;
+  background: rgb(35, 153, 147);
+  border: 1px solid #fff;
+  font-family: Patua One, sans-serif;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 20px;
+}
+
+button.morph:hover {
+  background: none;
+  border: 1px solid rgb(35, 153, 147);
+  color: rgb(35, 153, 147);
+}
+
+.morphed {
+  animation: flashfade 4s forwards;
+  opacity: 0;
+}
+
+@keyframes flashfade {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.next {
+  text-align: center;
+  margin: 35px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.next p {
+  font-family: Patua One, sans-serif;
+  font-weight: 300;
+  text-align: center;
+  color: #fff;
+}
+
+@keyframes hueRotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(260deg) grayscale(100%);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+  }
+}
+
+.shutdown {
+  animation: shutdown 3s forwards;
+}
+
+@keyframes shutdown {
+  100% {
+    opacity: 0;
+  }
+}
