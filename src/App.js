@@ -6,24 +6,45 @@ import scrollToComponent from 'react-scroll-to-component'
 import noviceImg from './resources/novice.jpg'
 import sorceressImg from './resources/sorceress.jpg'
 import knightImg from './resources/knight.jpg'
-import sageImg from './resources/sage.jpg'
+import archerImg from './resources/archer.jpg'
+import bladeMasterImg from './resources/blademaster.jpg'
+import destroyerImg from './resources/destroyer.jpg'
+import summonerImg from './resources/summoner.jpg'
+import shapeshifterImg from './resources/shapeshifter.jpg'
+import banditImg from './resources/bandit.jpg'
+import phantomImg from './resources/phantom.jpg'
 import styles from './styles.module.css'
-import { Header, Subheader, Content } from './components'
+import { Header, Subheader, Content, CharacterBox } from './components'
+
+const characterSelections = [
+  { type: 'Sorceress', src: sorceressImg },
+  { type: 'Knight', src: knightImg },
+  { type: 'Shapeshifter', src: shapeshifterImg },
+  { type: 'Bandit', src: banditImg },
+  { type: 'Archer', src: archerImg },
+  { type: 'Blade Master', src: bladeMasterImg },
+  { type: 'Destroyer', src: destroyerImg },
+  { type: 'Summoner', src: summonerImg },
+  { type: 'Phantom', src: phantomImg },
+]
+
+const mappedCharSelections = characterSelections.reduce(
+  (acc, { type, src }) => ({
+    ...acc,
+    [type]: src,
+  }),
+  {},
+)
 
 const useLevelUpScreen = ({ morphRef, morphedRef }) => {
-  const [selected, setSelected] = React.useState([])
+  const [selected, setSelected] = React.useState(null)
   const [morphing, setMorphing] = React.useState(false)
   const [morphed, setMorphed] = React.useState(false)
   const [ready, setReady] = React.useState(false)
   const [shutdown, setShutdown] = React.useState(false)
 
   const onSelect = (type) => (e) => {
-    setSelected((prevSelected) => {
-      if (prevSelected.includes(type)) {
-        return prevSelected.filter((t) => t !== type)
-      }
-      return [...prevSelected, type]
-    })
+    setSelected(type)
     scrollToComponent(morphRef.current, {
       offset: 300,
       align: 'bottom',
@@ -46,10 +67,10 @@ const useLevelUpScreen = ({ morphRef, morphedRef }) => {
         align: 'middle',
         duration: 1000,
       })
+      setTimeout(() => {
+        setReady(true)
+      }, 2000)
     }
-    setTimeout(() => {
-      setReady(true)
-    }, 5000)
   }, [morphed, morphedRef, ready])
 
   React.useEffect(() => {
@@ -87,68 +108,42 @@ const App = () => {
     morphedRef,
   })
 
-  const onClick = (e) => {
-    console.log("Don't mind me. I'm useless until I become useful")
-  }
-
   return (
     <div
       className={cx(styles.root, {
         [styles.shutdown]: shutdown,
+        [styles.rootTransition]: morphed,
       })}
     >
       <Header>
         You are a <em>Novice</em>
       </Header>
       <Content>
-        <div
-          className={styles.characterBox}
+        <CharacterBox
           style={{ width: 200, height: 150 }}
-        >
-          <img alt='' src={noviceImg} />
-        </div>
+          imgProps={{ src: noviceImg }}
+          disableFlashing
+        />
       </Content>
       <Subheader>Congratulations on reaching level 10!</Subheader>
       <div style={{ margin: '25px auto' }}>
         <Header>Choose your destiny</Header>
         <Subheader>Choose one. Or all, if you know what I mean.</Subheader>
-        <Content>
-          <div
-            onClick={onSelect('Sorceress')}
-            className={cx(styles.characterBox, {
-              [styles.selectedBox]: selected.includes('Sorceress'),
-            })}
-          >
-            <h2>Sorceress</h2>
-            <img
-              alt=''
-              src={sorceressImg}
-              className={cx(styles.tier2, {
-                [styles.selected]: selected.includes('Sorceress'),
-              })}
+        <Content display='grid'>
+          {characterSelections.map((props, index) => (
+            <CharacterBox
+              key={`char_selection_${index}`}
+              onClick={onSelect(props.type)}
+              isSelected={selected === props.type}
+              {...props}
             />
-          </div>
-          <div
-            onClick={onSelect('Knight')}
-            className={cx(styles.characterBox, {
-              [styles.selectedBox]: selected.includes('Knight'),
-            })}
-          >
-            <h2>Knight</h2>
-            <img
-              alt=''
-              src={knightImg}
-              className={cx(styles.tier2, {
-                [styles.selected]: selected.includes('Knight'),
-              })}
-            />
-          </div>
+          ))}
         </Content>
       </div>
       <div
         ref={morphRef}
         className={cx(styles.morph, {
-          [styles.hidden]: !selected.length,
+          [styles.hidden]: !selected,
         })}
       >
         <MdKeyboardTab className={styles.morphArrow} />
@@ -172,13 +167,16 @@ const App = () => {
         })}
       >
         <Header>Congratulations!</Header>
-        <div className={styles.container}>
-          <div ref={morphedRef} className={styles.characterBox}>
-            <img src={sageImg} />
-          </div>
-        </div>
+        <Content>
+          <CharacterBox
+            ref={morphedRef}
+            type={selected}
+            headerProps={{ className: styles.unique }}
+            imgProps={{ src: mappedCharSelections[selected] }}
+          />
+        </Content>
         <Subheader>
-          You have morphed into a <em>Sage</em>
+          You have morphed into a <em>{selected}</em>
         </Subheader>
       </div>
       <div

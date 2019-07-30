@@ -15,20 +15,47 @@ export const Subheader = ({ children, ...rest }) => (
   </small>
 )
 
-export const Content = ({ children, ...rest }) => (
-  <div className={styles.container} {...rest}>
+export const Content = ({ display = '', children, ...rest }) => (
+  <div
+    className={cx(styles.container, {
+      [styles.gridDisplay]: display === 'grid',
+    })}
+    {...rest}
+  >
     {children}
   </div>
 )
 
-export const CharacterBox = ({ isSelected, type, imgProps, ...rest }) => (
-  <div
-    className={cx(styles.characterBox, {
-      [styles.selectedBox]: isSelected,
-    })}
-    {...rest}
-  >
-    {type && <h2>{type}</h2>}
-    <img alt='' {...imgProps} />
-  </div>
+export const CharacterBox = React.forwardRef(
+  (
+    {
+      isSelected,
+      type,
+      headerProps = {},
+      imgProps = {},
+      src,
+      disableFlashing,
+      ...rest
+    },
+    ref,
+  ) => (
+    <div
+      ref={ref}
+      className={cx(styles.characterBox, {
+        [styles.selectedBox]: isSelected,
+      })}
+      {...rest}
+    >
+      {type && <h3 {...headerProps}>{type}</h3>}
+      <img
+        {...imgProps}
+        src={src || imgProps.src}
+        className={cx(styles.tier2, imgProps.className, {
+          [styles.selected]: isSelected,
+          [styles.noAnimation]: !!disableFlashing,
+        })}
+        alt=''
+      />
+    </div>
+  ),
 )
